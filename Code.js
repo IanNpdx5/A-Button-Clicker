@@ -4,15 +4,15 @@ $(function () {
 
   // type: "pc" = per click, "ps" = per second
   var upgrades = [
-    { id: "#up1",  price: 15,    amount: 1,   type: "pc" },
-    { id: "#up2",  price: 100,   amount: 5,   type: "pc" },
-    { id: "#up3",  price: 500,   amount: 10,  type: "pc" },
-    { id: "#up4",  price: 1000,  amount: 100, type: "pc" },
-    { id: "#up5",  price: 5000,  amount: 500, type: "pc" },
-    { id: "#up6",  price: 100,   amount: 1,   type: "ps" },
-    { id: "#up7",  price: 500,   amount: 5,   type: "ps" },
-    { id: "#up8",  price: 1000,  amount: 10,  type: "ps" },
-    { id: "#up9",  price: 5000,  amount: 50,  type: "ps" },
+    { id: "#up1", price: 15, amount: 1, type: "pc" },
+    { id: "#up2", price: 100, amount: 5, type: "pc" },
+    { id: "#up3", price: 500, amount: 10, type: "pc" },
+    { id: "#up4", price: 1000, amount: 100, type: "pc" },
+    { id: "#up5", price: 5000, amount: 500, type: "pc" },
+    { id: "#up6", price: 100, amount: 1, type: "ps" },
+    { id: "#up7", price: 500, amount: 5, type: "ps" },
+    { id: "#up8", price: 1000, amount: 10, type: "ps" },
+    { id: "#up9", price: 5000, amount: 50, type: "ps" },
     { id: "#up10", price: 10000, amount: 100, type: "ps" },
     { id: "#up11", price: 25000, amount: 2, type: "pcMultiplier", effect: "2× Click power" },
     { id: "#up12", price: 25000, amount: 2, type: "psMultiplier", effect: "2× CPS" },
@@ -67,22 +67,28 @@ $(function () {
         state: { count: 0, totalClicks: state.totalClicks, presses: state.totalPresses, perClick: 1, perSecond: 0 },
         prices: upgrades.map(function (u) { return u.price; })
       }));
+      //location.reload();
     } catch (error) {
       console.error(error)
     }
   }
 
-    function statReset() {
+  document.getElementById("softReset").addEventListener("click", softReset());
+
+  function statReset() {
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify({
         version: 1,
         state: { count: state.count, totalClicks: 0, presses: 0, perClick: state.perClick, perSecond: state.perSecond },
         prices: upgrades.map(function (u) { return u.price; })
       }));
+      //location.reload();
     } catch (error) {
       console.error(error)
     }
   }
+
+  document.getElementById("statReset").addEventListener("click", statReset());
 
   function hardReset() {
     try {
@@ -91,10 +97,13 @@ $(function () {
         state: { count: 0, totalClicks: 0, presses: 0, perClick: 1, perSecond: 0 },
         prices: upgrades.map(function (u) { return u.price; })
       }));
+      //location.reload();
     } catch (error) {
       console.error(error)
     }
   }
+
+  //document.getElementById("hardReset").addEventListener("click", hardReset());
 
   function render() {
     $("#count").text("Clicks: " + state.count);
