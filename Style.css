@@ -13,8 +13,8 @@ body {
 #page {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
-    grid-template-rows: minmax(360px, 60vh) auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(360px, 56vh) auto auto;
     gap: 16px;
     padding: 16px;
 }
@@ -31,13 +31,13 @@ body {
 
 #buttondiv button {
     font-family: "Orbitron", Arial, sans-serif;
-    width: clamp(180px, 24vw, 400px);
-    height: clamp(180px, 24vw, 400px);
+    width: clamp(100px, 30vw, 400px);
+    height: clamp(100px, 30vw, 400px);
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(1.7rem, 4vw, 4rem);
+    font-size: clamp(1.7rem, 5vw, 4rem);
 }
 
 #count {
@@ -48,7 +48,7 @@ body {
 
 #shop {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
     min-width: 0;
     padding: 10px;
@@ -58,8 +58,13 @@ body {
     font-size: 0.96em;
 }
 
-#rightShop {
+#clickShop,
+#CPSShop,
+#multiplierShop {
     min-width: 0;
+    padding: 0 12px 12px;
+    border: 1px solid #444;
+    background: #101010;
 }
 
 #shop h3 {
@@ -71,22 +76,47 @@ body {
 }
 
 #info {
-    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
     min-width: 0;
-    border: dashed;
-    border-color: gray;
-    overflow: auto;
-    padding: 0 20px;
 }
 
-@media (max-width: 700px) {
+#productionInfo,
+#lifetimeInfo {
+    min-width: 0;
+    border: dashed gray;
+    padding: 0 20px;
+    padding-bottom: 10px;
+}
+
+#productionInfo button,
+#lifetimeInfo button {
+    font-family: "Orbitron", Arial, sans-serif;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    border: 2px solid #555;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    #shop {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
     #page {
-        grid-template-columns: minmax(0, 1fr);
         grid-template-rows: minmax(320px, 55vh) auto auto;
+        padding: 10px;
+        gap: 10px;
     }
 
+    #shop,
     #info {
-        grid-column: auto;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
@@ -95,10 +125,11 @@ body {
     font-family: "Orbitron", Arial, sans-serif;
     font-size: 0.9rem;
     padding: 6px 10px;
-    border: 2px solid #888;
-    background: #222;
-    color: #fff;
+    border: 2px solid #555;
+    background: #1a1a1a;
+    color: #e0e0e0;
     white-space: nowrap;
+    cursor: not-allowed;
 }
 
 #shop button .cost {
@@ -106,15 +137,6 @@ body {
     font-size: 1.05rem;
 }
 
-/* can't afford: muted border/background, text stays readable */
-#shop button:disabled {
-    border-color: #555;
-    background: #1a1a1a;
-    color: #e0e0e0;
-    cursor: not-allowed;
-}
-
-/* can afford: obvious highlight */
 #shop button.affordable {
     border-color: #3ddc84;
     color: #3ddc84;

@@ -1,5 +1,5 @@
 $(function () {
-  var state = { count: 0, totalClicks: 0, presses: 0, perClick: 1, perSecond: 0 };
+  var state = { count: 0, totalClicks: 0, totalPresses: 0, perClick: 1, perSecond: 0 };
   var SAVE_KEY = "buttonClickerSave";
 
   // type: "pc" = per click, "ps" = per second
@@ -13,7 +13,11 @@ $(function () {
     { id: "#up7",  price: 500,   amount: 5,   type: "ps" },
     { id: "#up8",  price: 1000,  amount: 10,  type: "ps" },
     { id: "#up9",  price: 5000,  amount: 50,  type: "ps" },
-    { id: "#up10", price: 10000, amount: 100, type: "ps" }
+    { id: "#up10", price: 10000, amount: 100, type: "ps" },
+    { id: "#up11", price: 25000, amount: 2, type: "pcMultiplier", effect: "2× Click power" },
+    { id: "#up12", price: 25000, amount: 2, type: "psMultiplier", effect: "2× CPS" },
+    { id: "#up13", price: 250000, amount: 5, type: "pcMultiplier", effect: "5× Click power" },
+    { id: "#up14", price: 250000, amount: 5, type: "psMultiplier", effect: "5× CPS" }
   ];
   var PRICE_GROWTH = 1.15; // set to 1 to keep your original fixed prices
 
@@ -25,6 +29,7 @@ $(function () {
         prices: upgrades.map(function (u) { return u.price; })
       }));
     } catch (error) {
+      console.error(error)
       // The game remains playable if browser storage is unavailable.
     }
   }
@@ -50,7 +55,44 @@ $(function () {
         });
       }
     } catch (error) {
+      console.error(error)
       // Ignore invalid or unavailable saves and start a fresh game.
+    }
+  }
+
+  function softReset() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        version: 1,
+        state: { count: 0, totalClicks: state.totalClicks, presses: state.totalPresses, perClick: 1, perSecond: 0 },
+        prices: upgrades.map(function (u) { return u.price; })
+      }));
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+    function statReset() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        version: 1,
+        state: { count: state.count, totalClicks: 0, presses: 0, perClick: state.perClick, perSecond: state.perSecond },
+        prices: upgrades.map(function (u) { return u.price; })
+      }));
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  function hardReset() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        version: 1,
+        state: { count: 0, totalClicks: 0, presses: 0, perClick: 1, perSecond: 0 },
+        prices: upgrades.map(function (u) { return u.price; })
+      }));
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -59,12 +101,13 @@ $(function () {
     $("#amountPC").text("Amount per click: " + state.perClick);
     $("#amountPS").text("Click(s) per second (CPS): " + state.perSecond);
     $("#clicks").text("Total clicks: " + state.totalClicks);
-    $("#presses").text("Total presses: " + state.presses);
+    $("#presses").text("Total presses: " + state.totalPresses);
 
     upgrades.forEach(function (u) {
       var affordable = state.count >= u.price;
+      var effect = u.effect || ("+" + u.amount + (u.type === "pc" ? " click" : " CPS"));
       $(u.id)
-        .html('<span class="cost">' + u.price.toLocaleString() + '</span> Clicks')
+        .html('<span class="cost">' + u.price.toLocaleString() + '</span> Clicks (' + effect + ')')
         .prop("disabled", !affordable)
         .toggleClass("affordable", affordable);
     });
@@ -73,7 +116,7 @@ $(function () {
   $("#clickerButton").on("click", function () {
     state.count += state.perClick;
     state.totalClicks += state.perClick;
-    state.presses++;
+    state.totalPresses++;
     render();
     saveGame();
   });
@@ -83,7 +126,9 @@ $(function () {
       if (state.count < u.price) return;
       state.count -= u.price;
       if (u.type === "pc") state.perClick += u.amount;
-      else state.perSecond += u.amount;
+      else if (u.type === "ps") state.perSecond += u.amount;
+      else if (u.type === "pcMultiplier") state.perClick *= u.amount;
+      else if (u.type === "psMultiplier") state.perSecond = Math.max(1, state.perSecond) * u.amount;
       u.price = Math.ceil(u.price * PRICE_GROWTH);
       render();
       saveGame();
