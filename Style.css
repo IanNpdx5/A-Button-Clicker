@@ -101,6 +101,12 @@ body {
     white-space: nowrap;
 }
 
+#hardReset {
+    border: #ff0000;
+    background: #ff0000;
+    color: #ff0000;
+}
+
 @media (max-width: 900px) {
     #shop {
         grid-template-columns: repeat(2, minmax(0, 1fr));
