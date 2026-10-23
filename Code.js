@@ -61,49 +61,35 @@ $(function () {
   }
 
   function softReset() {
-    try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({
-        version: 1,
-        state: { count: 0, totalClicks: state.totalClicks, presses: state.totalPresses, perClick: 1, perSecond: 0 },
-        prices: upgrades.map(function (u) { return u.price; })
-      }));
-      //location.reload();
-    } catch (error) {
-      console.error(error)
-    }
+    state.count = 0;
+    state.perSecond = 0;
+    state.perClick = 0;
+    saveGame();
+    location.reload();
   }
 
-  document.getElementById("softReset").addEventListener("click", softReset());
+  document.getElementById("softReset").addEventListener("click", softReset);
 
   function statReset() {
-    try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({
-        version: 1,
-        state: { count: state.count, totalClicks: 0, presses: 0, perClick: state.perClick, perSecond: state.perSecond },
-        prices: upgrades.map(function (u) { return u.price; })
-      }));
-      //location.reload();
-    } catch (error) {
-      console.error(error)
-    }
+    state.totalClicks = 0;
+    state.totalPresses = 0;
+    saveGame();
+    location.reload();
   }
 
-  document.getElementById("statReset").addEventListener("click", statReset());
+  document.getElementById("statReset").addEventListener("click", statReset);
 
   function hardReset() {
-    try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({
-        version: 1,
-        state: { count: 0, totalClicks: 0, presses: 0, perClick: 1, perSecond: 0 },
-        prices: upgrades.map(function (u) { return u.price; })
-      }));
-      //location.reload();
-    } catch (error) {
-      console.error(error)
-    }
+    state.count = 0;
+    state.perClick = 0;
+    state.perSecond = 0;
+    state.totalClicks = 0;
+    state.totalPresses = 0;
+    saveGame();
+    location.reload();
   }
 
-  //document.getElementById("hardReset").addEventListener("click", hardReset());
+  //document.getElementById("hardReset").addEventListener("click", hardReset);
 
   function render() {
     $("#count").text("Clicks: " + state.count);
